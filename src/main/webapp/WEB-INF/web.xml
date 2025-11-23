@@ -8,7 +8,7 @@
     <display-name>sof3012-assignment-java4</display-name>
 
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>home</welcome-file> <!-- Map tới @WebServlet("/home") -->
     </welcome-file-list>
 
 </web-app>
