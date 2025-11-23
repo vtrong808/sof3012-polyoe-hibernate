@@ -39,7 +39,7 @@
                                 <i class="bi bi-person-circle me-1"></i> ${sessionScope.user.fullname}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+                                <li><a class="dropdown-item" href="<c:url value='/edit-profile'/>">Cập nhật tài khoản</a></li>
                                 <c:if test="${sessionScope.user.admin}">
                                     <li><a class="dropdown-item text-danger" href="<c:url value='/admin'/>">Trang quản trị</a></li>
                                 </c:if>

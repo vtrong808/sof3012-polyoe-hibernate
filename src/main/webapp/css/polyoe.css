@@ -129,7 +129,7 @@
     color: #fff; /* Chữ trắng */
     transition: all 0.2s;
 }
-
+S
 .dropdown-item:hover, .dropdown-item:focus {
     background-color: var(--cli-primary); /* Hover nền vàng */
     color: var(--cli-dark); /* Chữ chuyển sang tím */
@@ -137,4 +137,16 @@
 
 .dropdown-divider {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================
+   5. LOGIN PAGE STYLES
+   ========================================= */
+.link-forgot {
+    color: var(--cli-dark); /* Màu tím than */
+    transition: color 0.3s ease;
+}
+.link-forgot:hover {
+    color: #d63384; /* Màu hồng đậm khi hover */
+    text-decoration: underline !important;
 }
