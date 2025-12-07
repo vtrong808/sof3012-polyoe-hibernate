@@ -9,7 +9,6 @@ public class JpaUtils {
 
     public static EntityManager getEntityManager() {
         if (factory == null || !factory.isOpen()) {
-            // Tên "PolyOE_Lab3" phải khớp chính xác với tên trong persistence.xml
             factory = Persistence.createEntityManagerFactory("PolyOE_ASM");
         }
         return factory.createEntityManager();

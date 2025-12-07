@@ -10,17 +10,17 @@
         <class>com.poly.entity.Share</class>
 
         <properties>
-            <property name="jakarta.persistence.jdbc.driver"
-                      value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:sqlserver://LAPTOP-7RD7637C:1433;databaseName=PolyOE_ASM;encrypt=false;trustServerCertificate=true;"/>
+                      value="jdbc:mysql://localhost:3306/PolyOE_ASM?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;characterEncoding=UTF-8"/>
 
-            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="A1234b1234@"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 
-            <!-- Hỗ trợ Unicode tiếng Việt -->
-            <property name="hibernate.connection.charSet" value="UTF-8"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
         </properties>
 
     </persistence-unit>

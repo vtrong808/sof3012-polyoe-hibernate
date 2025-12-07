@@ -40,11 +40,11 @@
             <version>6.4.4.Final</version>
         </dependency>
 
-        <!-- 3. SQL Server Driver -->
+        <!-- 3. MySQL Driver -->
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>12.6.1.jre11</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.3.0</version>
         </dependency>
 
         <!-- 4. Lombok (Giảm boilerplate code) -->
