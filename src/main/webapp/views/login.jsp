@@ -32,6 +32,13 @@
             <div class="d-grid">
                 <button type="submit" class="btn btn-cli-primary py-2">Đăng nhập ngay</button>
             </div>
+
+            <div class="d-grid">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/PolyOE_ASM/login-google&response_type=code&client_id=YOUR_CLIENT_ID"
+                   class="btn btn-outline-dark py-2">
+                    <i class="bi bi-google me-2"></i> Đăng nhập bằng Google
+                </a>
+            </div>
         </form>
         <div class="d-flex justify-content-between mb-4 align-items-center">
             <div class="form-check">

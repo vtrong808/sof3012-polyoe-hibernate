@@ -102,7 +102,7 @@
         </nav>
 
         <div class="mt-auto p-3 border-top border-secondary text-center">
-            <small class="text-white-50">&copy; 2024 PolyOE</small>
+            <small class="text-white-50">&copy; 2025 PolyOE</small>
         </div>
     </nav>
 
