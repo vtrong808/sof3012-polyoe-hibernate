@@ -7,8 +7,8 @@ import java.util.Properties;
 
 public class XEmail {
     // Thay bằng email và app password của ông
-    private static final String FROM_EMAIL = "your-email@gmail.com";
-    private static final String PASSWORD = "your-app-password";
+    private static final String FROM_EMAIL = "vtrong808@gmail.com";
+    private static final String PASSWORD = "ffijqhfjgdsyjzrb";
 
     public static void send(String to, String subject, String body) {
         Properties props = new Properties();
