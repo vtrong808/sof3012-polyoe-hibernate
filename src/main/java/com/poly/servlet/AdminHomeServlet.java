@@ -1,6 +1,6 @@
 package com.poly.servlet;
 
-import com.poly.dao.ReportDAO; // Import DAO mới tạo
+import com.poly.dao.ReportDAO;
 import com.poly.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

@@ -160,7 +160,7 @@
 
 <script>
     function setShareId(id) {
-        document.getElementById('shareVideoId').value = id;
+        document.getElementById('shareVideoIdHome').value = id;
     }
 </script>
 </body>

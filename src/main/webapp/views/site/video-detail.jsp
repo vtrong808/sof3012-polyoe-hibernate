@@ -39,9 +39,12 @@
                         <a href="<c:url value='/video/like?id=${video.id}'/>" class="btn btn-cli-primary rounded-pill px-4">
                             <i class="bi bi-hand-thumbs-up-fill"></i> Thích
                         </a>
-                        <a href="<c:url value='/video/share?videoId=${video.id}'/>" class="btn btn-outline-secondary rounded-pill px-4">
+
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                                data-bs-toggle="modal"
+                                data-bs-target="#shareModalDetail">
                             <i class="bi bi-share-fill"></i> Chia sẻ
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -66,6 +69,37 @@
                 </a>
                 </c:forEach>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="shareModalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-cli-dark text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-envelope-paper-heart text-cli-primary"></i> Chia sẻ video này
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<c:url value='/video/share'/>" method="post">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="videoId" value="${video.id}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Email người nhận:</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="nhapemail@example.com" required>
+                        </div>
+                        <div class="form-text mt-2">PolyOE sẽ gửi đường dẫn video này ngay lập tức.</div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-cli-primary px-4 fw-bold">Gửi ngay</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

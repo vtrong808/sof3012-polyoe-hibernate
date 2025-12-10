@@ -25,55 +25,71 @@ public class ShareServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1. Set tiếng Việt
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
-            // 1. Kiểm tra đăng nhập
+            // 2. Kiểm tra đăng nhập
             User user = (User) req.getSession().getAttribute("user");
             if (user == null) {
                 resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
 
-            // 2. Lấy dữ liệu
+            // 3. Lấy dữ liệu
             String videoId = req.getParameter("videoId");
             String emailTo = req.getParameter("email");
 
-            // 3. Xử lý Database (Lưu lịch sử Share)
+            if (emailTo == null || emailTo.trim().isEmpty()) {
+                req.getSession().setAttribute("error", "Vui lòng nhập email người nhận!");
+                redirectBack(req, resp);
+                return;
+            }
+
+            // 4. Xử lý Logic
             try (ShareDAO shareDao = new ShareDAO();
                  VideoDAO videoDao = new VideoDAO()) {
 
                 Video video = videoDao.findById(videoId);
                 if (video != null) {
+                    // A. Gửi Email trước (Nếu gửi lỗi thì văng Exception xuống catch, không lưu DB)
+                    String subject = "Chia sẻ video hay: " + video.getTitle();
+                    String link = req.getRequestURL().toString().replace("share", "detail?id=" + videoId);
+
+                    StringBuilder body = new StringBuilder();
+                    body.append("<h3>Xin chào,</h3>");
+                    body.append("<p>Người dùng <b>").append(user.getFullname()).append("</b> đã chia sẻ video này với bạn:</p>");
+                    body.append("<p style='color:blue; font-weight:bold;'>").append(video.getTitle()).append("</p>");
+                    body.append("<a href='").append(link).append("'>Xem ngay tại đây</a>");
+
+                    XEmail.send(emailTo, subject, body.toString());
+
+                    // B. Lưu vào DB sau khi gửi thành công
                     Share share = new Share();
                     share.setUser(user);
                     share.setVideo(video);
                     share.setEmails(emailTo);
                     share.setShareDate(new Date());
+                    shareDao.create(share);
 
-                    shareDao.create(share); // Lưu vào DB
-
-                    // 4. Gửi Email
-                    String subject = "Chia sẻ video hay từ PolyOE";
-                    String link = req.getRequestURL().toString().replace("share", "detail?id=" + videoId);
-                    String body = String.format(
-                            "Xin chào,<br><br>" +
-                                    "Bạn của bạn là <b>%s</b> (%s) muốn chia sẻ video <b>%s</b> với bạn.<br>" +
-                                    "Click vào đây để xem ngay: <a href='%s'>Xem Video</a><br><br>" +
-                                    "Chúc bạn xem phim vui vẻ!",
-                            user.getFullname(), user.getEmail(), video.getTitle(), link
-                    );
-
-                    XEmail.send(emailTo, subject, body);
-
-                    req.getSession().setAttribute("message", "Đã gửi video và lưu lịch sử thành công!");
+                    // C. Thông báo thành công
+                    req.getSession().setAttribute("message", "Đã gửi email chia sẻ thành công!");
+                } else {
+                    req.getSession().setAttribute("error", "Video không tồn tại!");
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            req.getSession().setAttribute("error", "Lỗi: " + e.getMessage());
+            req.getSession().setAttribute("error", "Lỗi gửi mail: " + e.getMessage());
         }
 
         // 5. Quay lại trang cũ
+        redirectBack(req, resp);
+    }
+
+    private void redirectBack(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String referer = req.getHeader("Referer");
         resp.sendRedirect(referer != null ? referer : req.getContextPath() + "/home");
     }

@@ -53,3 +53,35 @@
         </div>
     </div>
 </nav>
+
+<div class="alert-absolute-top-right">
+    <%-- 1. Thông báo thành công --%>
+    <c:if test="${not empty sessionScope.message}">
+        <div class="alert alert-success alert-dismissible fade show shadow border-0" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                <div>
+                    <h6 class="fw-bold mb-0">Thành công!</h6>
+                    <small>${sessionScope.message}</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <c:remove var="message" scope="session"/>
+    </c:if>
+
+    <%-- 2. Thông báo lỗi --%>
+    <c:if test="${not empty sessionScope.error}">
+        <div class="alert alert-danger alert-dismissible fade show shadow border-0" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                <div>
+                    <h6 class="fw-bold mb-0">Thất bại!</h6>
+                    <small>${sessionScope.error}</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <c:remove var="error" scope="session"/>
+    </c:if>
+</div>

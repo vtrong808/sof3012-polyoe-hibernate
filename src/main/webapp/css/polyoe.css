@@ -150,3 +150,28 @@ S
     color: #d63384; /* Màu hồng đậm khi hover */
     text-decoration: underline !important;
 }
+
+/* =========================================
+   6. TOAST NOTIFICATION (Thông báo góc phải)
+   ========================================= */
+.alert-absolute-top-right {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999; /* Đảm bảo nằm trên mọi thành phần khác */
+    min-width: 320px;
+    max-width: 400px;
+    animation: slideInRight 0.5s ease-out;
+}
+
+/* Hiệu ứng trượt từ phải sang */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
