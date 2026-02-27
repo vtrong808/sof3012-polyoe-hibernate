@@ -1,6 +1,8 @@
 package com.poly.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
@@ -8,7 +10,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 
 public class UIAutomationTest {
     private WebDriver driver;
@@ -21,6 +28,27 @@ public class UIAutomationTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    // Hàm hỗ trợ chụp ảnh màn hình
+    private void takeScreenshot(String stepName) {
+        try {
+            TakesScreenshot ts = (TakesScreenshot) driver;
+            File source = ts.getScreenshotAs(OutputType.FILE);
+
+            // Tạo tên file có kèm thời gian để không bị ghi đè
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File target = new File("screenshots/" + stepName + "_" + timestamp + ".png");
+
+            // Tạo thư mục screenshots nếu chưa có
+            target.getParentFile().mkdirs();
+
+            // Lưu file ảnh
+            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Đã chụp ảnh màn hình: " + target.getAbsolutePath());
+        } catch (Exception e) {
+            System.out.println("Lỗi khi chụp ảnh màn hình: " + e.getMessage());
+        }
     }
 
     @Test(priority = 1)
@@ -40,8 +68,10 @@ public class UIAutomationTest {
 
         Thread.sleep(2000);
 
-        // ĐÃ SỬA: Admin sẽ được đưa vào trang /admin chứ không phải /home
         Assert.assertTrue(driver.getCurrentUrl().contains("/admin"), "Đăng nhập thất bại, không vào được trang admin");
+
+        // 📸 CHỤP ẢNH: Sau khi đăng nhập thành công
+        takeScreenshot("1_SauDangNhap");
     }
 
     @Test(priority = 3)
@@ -52,15 +82,16 @@ public class UIAutomationTest {
         // --- 1. CREATE (Thêm) ---
         driver.findElement(By.name("id")).sendKeys("auto01");
         driver.findElement(By.name("password")).sendKeys("123");
-        // Bổ sung thêm trường fullname vì trong file JSP có input name="fullname" bắt buộc nhập (required)
         driver.findElement(By.name("fullname")).sendKeys("Selenium User");
         driver.findElement(By.name("email")).sendKeys("auto01@gmail.com");
 
-        // ĐÃ SỬA: Tìm nút bằng xpath qua thuộc tính formaction='/admin/user/create'
         driver.findElement(By.xpath("//button[contains(@formaction, '/create')]")).click();
-
         Thread.sleep(2000);
+
         Assert.assertTrue(driver.getPageSource().contains("auto01"), "Thêm mới thất bại");
+
+        // 📸 CHỤP ẢNH: Sau khi Thêm mới User
+        takeScreenshot("2_SauKhiThem_auto01");
 
         // --- 2. UPDATE (Cập nhật) ---
         driver.findElement(By.name("id")).clear();
@@ -75,19 +106,25 @@ public class UIAutomationTest {
         driver.findElement(By.name("email")).clear();
         driver.findElement(By.name("email")).sendKeys("auto_updated@gmail.com");
 
-        // ĐÃ SỬA: Tìm nút Lưu bằng xpath
         driver.findElement(By.xpath("//button[contains(@formaction, '/update')]")).click();
         Thread.sleep(2000);
+
         Assert.assertTrue(driver.getPageSource().contains("auto_updated@gmail.com"), "Cập nhật thất bại");
+
+        // 📸 CHỤP ẢNH: Sau khi Sửa User
+        takeScreenshot("3_SauKhiSua_auto01");
 
         // --- 3. DELETE (Xóa) ---
         driver.findElement(By.name("id")).clear();
         driver.findElement(By.name("id")).sendKeys("auto01");
 
-        // ĐÃ SỬA: Tìm nút Xóa bằng xpath
         driver.findElement(By.xpath("//button[contains(@formaction, '/delete')]")).click();
         Thread.sleep(2000);
+
         Assert.assertFalse(driver.getPageSource().contains("auto_updated@gmail.com"), "Xóa thất bại");
+
+        // 📸 CHỤP ẢNH: Sau khi Xóa User
+        takeScreenshot("4_SauKhiXoa_auto01");
     }
 
     @AfterClass
