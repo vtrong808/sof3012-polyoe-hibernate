@@ -4,6 +4,7 @@ import com.poly.entity.Video;
 import com.poly.utils.ExcelReadUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -14,6 +15,13 @@ public class VideoDAOTest {
     @BeforeClass
     public void setUp() {
         videoDAO = new VideoDAO();
+        // DỌN DẸP ĐÚNG 1 LẦN DUY NHẤT TRƯỚC KHI BẮT ĐẦU CHUỖI TEST
+        try {
+            if (videoDAO.findById("v01") != null) videoDAO.delete("v01");
+            if (videoDAO.findById("v02") != null) videoDAO.delete("v02");
+        } catch (Exception e) {
+            // Bỏ qua lỗi
+        }
     }
 
     @DataProvider(name = "videoCreateData")
@@ -26,10 +34,11 @@ public class VideoDAOTest {
 
         try {
             videoDAO.create(v);
-            if ("SUCCESS".equals(expected)) Assert.assertNotNull(videoDAO.findById(id));
-            else Assert.fail(tcId + ": Không bắt được lỗi");
+            if ("SUCCESS".equals(expected)) Assert.assertNotNull(videoDAO.findById(id), tcId);
+            else Assert.fail(tcId + ": Lẽ ra phải lỗi nhưng lại tạo thành công");
         } catch (Exception e) {
-            if ("SUCCESS".equals(expected)) Assert.fail(tcId + ": Tạo video thất bại");
+            if ("SUCCESS".equals(expected)) Assert.fail(tcId + ": Tạo video thất bại - " + e.getMessage());
+            else Assert.assertTrue(true, tcId + ": Bắt lỗi đúng dự kiến");
         }
     }
 
@@ -48,9 +57,13 @@ public class VideoDAOTest {
     @Test(dataProvider = "videoUpdateData", dependsOnMethods = "testFind")
     public void testUpdate(String tcId, String id, String newTitle, String expected) {
         Video v = videoDAO.findById(id);
-        v.setTitle(newTitle);
-        videoDAO.update(v);
-        Assert.assertEquals(videoDAO.findById(id).getTitle(), newTitle, tcId);
+        if (v != null) {
+            v.setTitle(newTitle);
+            videoDAO.update(v);
+            Assert.assertEquals(videoDAO.findById(id).getTitle(), newTitle, tcId);
+        } else {
+            Assert.fail(tcId + ": Không tìm thấy video để update");
+        }
     }
 
     @DataProvider(name = "videoDeleteData")
@@ -60,9 +73,17 @@ public class VideoDAOTest {
     public void testDelete(String tcId, String id, String expected) {
         try {
             videoDAO.delete(id);
-            if ("FK_ERROR".equals(expected)) Assert.fail(tcId + ": Lẽ ra phải dính lỗi khóa ngoại (nếu video đã được like)");
+            if ("FK_ERROR".equals(expected)) {
+                Assert.fail(tcId + ": Lẽ ra phải dính lỗi khóa ngoại nhưng lại xóa thành công (Vì video này mới tạo, chưa có ai like). Hãy đổi EXPECTED trong Excel thành SUCCESS.");
+            } else {
+                Assert.assertNull(videoDAO.findById(id), tcId);
+            }
         } catch (Exception e) {
-            Assert.assertTrue(true, tcId + ": Lỗi khóa ngoại hợp lý");
+            if ("SUCCESS".equals(expected)) {
+                Assert.fail(tcId + ": Xóa thất bại - " + e.getMessage());
+            } else {
+                Assert.assertTrue(true, tcId + ": Bắt lỗi khóa ngoại hợp lý");
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import com.poly.entity.User;
 import com.poly.utils.ExcelReadUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -14,6 +15,13 @@ public class UserDAOTest {
     @BeforeClass
     public void setUp() {
         userDAO = new UserDAO();
+        // DỌN DẸP ĐÚNG 1 LẦN DUY NHẤT TRƯỚC KHI BẮT ĐẦU CHUỖI TEST
+        try {
+            if (userDAO.findById("new01") != null) userDAO.delete("new01");
+            if (userDAO.findById("new02") != null) userDAO.delete("new02");
+        } catch (Exception e) {
+            // Bỏ qua lỗi
+        }
     }
 
     // --- FIND TESTS ---

@@ -1,15 +1,14 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="PolyOE Test Suite">
 
-    <!-- Y3: Unit + DAO Test -->
     <test name="Unit Tests">
         <packages>
             <package name="com.poly.service"/>
             <package name="com.poly.dao"/>
+            <package name="com.poly.test"/>
         </packages>
     </test>
 
-    <!-- Y4: Selenium Automation Test -->
     <test name="Selenium Tests">
         <packages>
             <package name="com.poly.selenium"/>
